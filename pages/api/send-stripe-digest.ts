@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 // Ensure you import sendStripeDigest() from the correct location.
-import { sendStripeDigest } from "./stripe-helpers/send-stripe-digest";
+import { sendStripeDigest } from "../../stripe-helpers/send-stripe-digest";
 
 export default async function handler(
   req: NextApiRequest,
