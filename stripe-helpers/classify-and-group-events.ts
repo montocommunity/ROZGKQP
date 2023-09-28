@@ -1,4 +1,16 @@
-import { isSubscriptionStartEvent, ... } from './stripe-helpers/classification';
+import {
+  StripeSubscriptionEvent,
+  isCheckoutFailureEvent,
+  isInvoluntaryChurnEvent,
+  isPaymentFailedEvent,
+  isPaymentRecoveredEvent,
+  isSubscriptionStartEvent,
+  isSubscriptionUpgradeEvent,
+  isTrialConvertedEvent,
+  isUserCanceledEvent,
+  isUserUncanceledEvent,
+  isVoluntaryChurnEvent,
+} from "./classification";
 
 interface ClassifiedEvents {
   signups: StripeSubscriptionEvent[];
@@ -13,10 +25,22 @@ interface ClassifiedEvents {
   subscriptionUpgrades: StripeSubscriptionEvent[];
 }
 
-function classifyAndGroupEvents(events: StripeSubscriptionEvent[]): ClassifiedEvents {
-  const classifiedEvents: ClassifiedEvents = {...};
-
-  events.forEach(event => {
+export function classifyAndGroupEvents(
+  events: StripeSubscriptionEvent[]
+): ClassifiedEvents {
+  const classifiedEvents: ClassifiedEvents = {
+    signups: [],
+    trialConversions: [],
+    checkoutFailures: [],
+    scheduledToCancel: [],
+    unscheduledToCancel: [],
+    activeToPastDues: [],
+    pastDueToActive: [],
+    involuntaryChurn: [],
+    voluntaryChurn: [],
+    subscriptionUpgrades: [],
+  };
+  events.forEach((event) => {
     if (isSubscriptionStartEvent(event)) {
       classifiedEvents.signups!.push(event);
     } else if (isTrialConvertedEvent(event)) {

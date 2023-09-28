@@ -23,7 +23,7 @@ export interface StripeSubscriptionCreatedEvent
       StripeSubscriptionUnexpanded,
       { status: "active" | "incomplete" } // with our settings subscriptions generally start as 'incomplete' and move to 'active' once first payment succeeds. The only exception are subscriptions that we give out for free (e.g. via lifetime voucher codes), which start directly as active
     >;
-    previous_attributes: never;
+    previous_attributes?: never;
   };
 }
 
@@ -32,7 +32,7 @@ export interface StripeSubscriptionUpdatedEvent
   type: "customer.subscription.updated";
   data: {
     object: StripeSubscriptionUnexpanded;
-    previous_attributes: Partial<StripeSubscriptionUnexpanded>;
+    previous_attributes?: Partial<StripeSubscriptionUnexpanded>;
   };
 }
 
@@ -41,7 +41,7 @@ export interface StripeSubscriptionDeletedEvent
   type: "customer.subscription.deleted";
   data: {
     object: Replace<StripeSubscriptionUnexpanded, { status: "canceled" }>;
-    previous_attributes: never;
+    previous_attributes?: never;
   };
 }
 
@@ -73,55 +73,55 @@ export const isSubscriptionDeletedEvent = (
 export const isSubscriptionStartEvent = (
   e: StripeSubscriptionUpdatedEvent
 ): boolean =>
-  e.data.previous_attributes.status === "incomplete" &&
+  e.data.previous_attributes?.status === "incomplete" &&
   e.data.object.status === "active";
 
 export const isCheckoutFailureEvent = (
   e: StripeSubscriptionUpdatedEvent
 ): boolean =>
-  e.data.previous_attributes.status === "incomplete" &&
+  e.data.previous_attributes?.status === "incomplete" &&
   e.data.object.status === "incomplete_expired";
 
 export const isSubscriptionUpgradeEvent = (
   e: StripeSubscriptionUpdatedEvent
 ): boolean =>
-  e.data.previous_attributes.items?.data[0]?.plan.interval === "month" &&
+  e.data.previous_attributes?.items?.data[0]?.plan.interval === "month" &&
   e.data.object.items.data[0]?.plan.interval === "year";
 
 export const isSubscriptionDowngradeEvent = (
   e: StripeSubscriptionUpdatedEvent
 ): boolean =>
-  e.data.previous_attributes.items?.data[0]?.plan.interval === "year" &&
+  e.data.previous_attributes?.items?.data[0]?.plan.interval === "year" &&
   e.data.object.items.data[0]?.plan.interval === "month";
 
 export const isTrialConvertedEvent = (
   e: StripeSubscriptionUpdatedEvent
 ): boolean =>
-  e.data.previous_attributes.status === "trialing" &&
+  e.data.previous_attributes?.status === "trialing" &&
   e.data.object.status === "active";
 
 export const isPaymentFailedEvent = (
   e: StripeSubscriptionUpdatedEvent
 ): boolean =>
-  e.data.previous_attributes.status === "active" &&
+  e.data.previous_attributes?.status === "active" &&
   e.data.object.status === "past_due";
 
 export const isPaymentRecoveredEvent = (
   e: StripeSubscriptionUpdatedEvent
 ): boolean =>
-  e.data.previous_attributes.status === "past_due" &&
+  e.data.previous_attributes?.status === "past_due" &&
   e.data.object.status === "active";
 
 export const isUserCanceledEvent = (
   e: StripeSubscriptionUpdatedEvent
 ): boolean =>
-  e.data.previous_attributes.cancel_at_period_end === false &&
+  e.data.previous_attributes?.cancel_at_period_end === false &&
   e.data.object.cancel_at_period_end === true;
 
 export const isUserUncanceledEvent = (
   e: StripeSubscriptionUpdatedEvent
 ): boolean =>
-  e.data.previous_attributes.cancel_at_period_end === true &&
+  e.data.previous_attributes?.cancel_at_period_end === true &&
   e.data.object.cancel_at_period_end === false;
 
 export const isVoluntaryChurnEvent = (
