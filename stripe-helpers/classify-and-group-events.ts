@@ -62,7 +62,6 @@ export function classifyAndGroupEvents(
     } else if (isSubscriptionUpgradeEvent(event)) {
       classifiedEvents.subscriptionUpgrades!.push(event);
     }
-    // If needed, you can add more classifications here
   });
 
   return classifiedEvents;
