@@ -1,32 +1,32 @@
-import dayjs from "dayjs";
-import { stripe } from "./stripe";
 import Stripe from "stripe";
+import { stripe } from "./stripe";
 
 export async function fetchStripeEvents() {
   const events: Stripe.Event[] = [];
-  let has_more = true;
 
-  while (has_more) {
-    const response = await stripe.events.list({
-      delivery_success: true,
-      created: {
-        gte: parseInt(
-          (
-            dayjs().subtract(1, "D").startOf("day").toDate().getTime() / 1000
-          ).toString()
-        ),
-        lte: parseInt(
-          (
-            dayjs().subtract(1, "D").endOf("day").toDate().getTime() / 1000
-          ).toString()
-        ),
-      },
-      starting_after:
-        events.length !== 0 ? events[events.length - 1].id : undefined,
+  const startOfPreviousDay = new Date();
+  startOfPreviousDay.setDate(startOfPreviousDay.getDate() - 1);
+  startOfPreviousDay.setHours(0, 0, 0, 0);
+
+  const endOfPreviousDay = new Date(startOfPreviousDay);
+  endOfPreviousDay.setHours(23, 59, 59, 999);
+
+  const params = {
+    delivery_success: true,
+    created: {
+      gte: Math.floor(startOfPreviousDay.getTime() / 1000),
+      lte: Math.floor(endOfPreviousDay.getTime() / 1000),
+    },
+  };
+
+  let response;
+  do {
+    response = await stripe.events.list({
+      ...params,
+      starting_after: events.length ? events[events.length - 1].id : undefined,
     });
     events.push(...response.data);
-    has_more = response.has_more;
-  }
+  } while (response.has_more);
 
   return events;
 }
