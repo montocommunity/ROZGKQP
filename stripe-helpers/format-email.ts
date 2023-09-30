@@ -1,7 +1,15 @@
-export function formatEmail(classifiedEvents) {
-  // console.log(
-  //   `Here is your Stripe Digest for the period of ${startDate.toISOString()} to ${endDate.toISOString()}:`
-  // );
+export function formatEmail({
+  classifiedEvents,
+  from,
+  to,
+}: {
+  classifiedEvents: any;
+  from: Date;
+  to: Date;
+}) {
+  console.log(
+    `Here is your Stripe Digest for the period of ${from.toISOString()} to ${to.toISOString()}:`
+  );
 
   const categories = Object.keys(classifiedEvents);
 
@@ -12,12 +20,11 @@ export function formatEmail(classifiedEvents) {
     console.log(`## ${events.length} ${category}:`);
 
     for (const event of events) {
-      console.log({ custoer: event.data.object });
       const email = event.data.object.customer; // Assuming customer email is available in the event data
       const subscription = event.data.object.id;
       const metadata = event.data.object.metadata;
-      const currency = event.data.object.plan.currency;
-      const amount = event.data.object.plan.amount / 100; // Convert amount to dollars or appropriate currency
+      const currency = event.data.object.plan?.currency;
+      const amount = event.data.object.plan?.amount / 100; // Convert amount to dollars or appropriate currency
       const stripeUrl = `https://dashboard.stripe.com/subscriptions/${subscription}`;
 
       let logString = `[${email}] - `;

@@ -3,8 +3,8 @@ import { fetchStripeEvents } from "./fetch-stripe-events";
 import { formatEmail } from "./format-email";
 
 export async function sendStripeDigest() {
-  const events = await fetchStripeEvents();
-  const groupedEvents = classifyAndGroupEvents(events);
-  const emailContent = formatEmail(groupedEvents);
+  const { events, from, to } = await fetchStripeEvents({ days: 1 });
+  const classifiedEvents = classifyAndGroupEvents(events);
+  const emailContent = formatEmail({ classifiedEvents, from, to });
   // await sendEmail(emailContent);
 }

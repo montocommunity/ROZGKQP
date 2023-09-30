@@ -32,7 +32,7 @@ export async function createSeedData() {
   const subscription = await stripe.subscriptions.create({
     customer: customer.id,
     items: [{ plan: monthlyPlan.id }],
-    trial_period_days: 7,
+    trial_end: "now",
   });
 
   // Simulate different events

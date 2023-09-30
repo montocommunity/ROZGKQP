@@ -55,12 +55,12 @@ export function classifyAndGroupEvents(
       classifiedEvents.activeToPastDues!.push(event);
     } else if (isPaymentRecoveredEvent(event)) {
       classifiedEvents.pastDueToActive!.push(event);
+    } else if (isSubscriptionUpgradeEvent(event)) {
+      classifiedEvents.subscriptionUpgrades!.push(event);
     } else if (isInvoluntaryChurnEvent(event)) {
       classifiedEvents.involuntaryChurn!.push(event);
     } else if (isVoluntaryChurnEvent(event)) {
       classifiedEvents.voluntaryChurn!.push(event);
-    } else if (isSubscriptionUpgradeEvent(event)) {
-      classifiedEvents.subscriptionUpgrades!.push(event);
     }
   });
 
