@@ -7,9 +7,9 @@ export function formatEmail({
   from: Date;
   to: Date;
 }) {
-  console.log(
-    `Here is your Stripe Digest for the period of ${from.toISOString()} to ${to.toISOString()}:`
-  );
+  const digest = [
+    `Here is your Stripe Digest for the period of ${from.toISOString()} to ${to.toISOString()}:`,
+  ];
 
   const categories = Object.keys(classifiedEvents);
 
@@ -17,7 +17,7 @@ export function formatEmail({
     const category = categories[i];
     const events = classifiedEvents[category];
 
-    console.log(`## ${events.length} ${category}:`);
+    digest.push(`## ${events.length} ${category}:`);
 
     for (const event of events) {
       const email = event.data.object.customer; // Assuming customer email is available in the event data
@@ -61,7 +61,9 @@ export function formatEmail({
           break;
       }
 
-      console.log(logString);
+      digest.push(logString);
     }
   }
+
+  return digest.join("\n");
 }
