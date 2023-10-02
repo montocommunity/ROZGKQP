@@ -1,15 +1,10 @@
 ## Getting Started
 
-First, run the development server:
+- Put the stripe-helpers into your utils folder.
+- Add the sendStripeDigest() function into a serverless function.
+- Put the stripe-digest-workflow.yml into your GitHub workflows folder, and replace the url inside of the file with the url of your serverless function.
+- Replace the console.log(digest); in  send-stripe-digest.ts with your email sending logic (postmark).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Other note
+- We use the file stripe-helpers/stripe.ts for initializing stripe. you likely already have this as part of your codebase -> you should be able to use your logic instead of having this file.
 
-send a post request to http://localhost:3000/api/send-stripe-digest to console.log the digest text
