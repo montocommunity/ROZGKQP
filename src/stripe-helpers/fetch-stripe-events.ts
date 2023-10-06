@@ -1,4 +1,4 @@
-import Stripe from "stripe";
+import type Stripe from "stripe";
 import { stripe } from "./stripe";
 
 export async function fetchStripeEvents({ days }: { days: number }) {
@@ -12,7 +12,7 @@ export async function fetchStripeEvents({ days }: { days: number }) {
   endDay.setDate(endDay.getDate() - 1);
   endDay.setHours(23, 59, 59, 999);
 
-  const params = {
+  const basicParams = {
     delivery_success: true,
     created: {
       gte: Math.floor(startDay.getTime() / 1000),
@@ -21,11 +21,15 @@ export async function fetchStripeEvents({ days }: { days: number }) {
   };
 
   let response;
+  
   do {
-    response = await stripe.events.list({
-      ...params,
-      starting_after: events.length ? events[events.length - 1].id : undefined,
-    });
+    const lastEvent = events[events.length - 1];
+    const extendedParams = lastEvent && events.length
+      ? { ...basicParams, starting_after: lastEvent.id }
+      : basicParams;
+    
+    
+    response = await stripe.events.list(extendedParams);
     events.push(...response.data);
   } while (response.has_more);
 
