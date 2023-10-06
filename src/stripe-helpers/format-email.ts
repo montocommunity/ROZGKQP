@@ -15,7 +15,8 @@ export function formatEmail({
 
   for (let i = 0; i < categories.length; i++) {
     const category = categories[i];
-    if (!category) continue;
+    if (!category) throw new Error("Category is undefined");
+
     const events = classifiedEvents[category];
 
     digest.push(`## ${events.length} ${category}:`);

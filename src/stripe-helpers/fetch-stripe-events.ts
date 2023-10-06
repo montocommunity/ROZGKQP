@@ -1,5 +1,6 @@
 import type Stripe from "stripe";
 import { stripe } from "./stripe";
+import { isSubscriptionEvent } from "./classification";
 
 export async function fetchStripeEvents({ days }: { days: number }) {
   const events: Stripe.Event[] = [];
@@ -14,6 +15,7 @@ export async function fetchStripeEvents({ days }: { days: number }) {
 
   const basicParams = {
     delivery_success: true,
+    type: 'customer.subscription.*',
     created: {
       gte: Math.floor(startDay.getTime() / 1000),
       lte: Math.floor(endDay.getTime() / 1000),
@@ -28,10 +30,9 @@ export async function fetchStripeEvents({ days }: { days: number }) {
       ? { ...basicParams, starting_after: lastEvent.id }
       : basicParams;
     
-    
     response = await stripe.events.list(extendedParams);
     events.push(...response.data);
   } while (response.has_more);
 
-  return { events, from: startDay, to: endDay };
+  return { events: events.filter(isSubscriptionEvent), from: startDay, to: endDay };
 }
