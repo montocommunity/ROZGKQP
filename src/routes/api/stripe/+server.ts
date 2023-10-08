@@ -1,6 +1,6 @@
-import { classifyAndGroupEvents } from "src/stripe-helpers/classify-and-group-events";
-import { fetchStripeEvents } from "src/stripe-helpers/fetch-stripe-events"
-import { formatEmail } from "src/stripe-helpers/format-email";
+import { classifyAndGroupEvents } from "../../../stripe-helpers/classify-and-group-events";
+import { fetchStripeEvents } from "../../../stripe-helpers/fetch-stripe-events"
+import { formatEmail } from "../../../stripe-helpers/format-email";
 
 
 export const POST = async () => {
@@ -8,4 +8,5 @@ export const POST = async () => {
     const classifiedEvents = classifyAndGroupEvents(events);
     const digest = formatEmail({classifiedEvents, from, to});
     console.log(digest);
+    return new Response(digest)
 }

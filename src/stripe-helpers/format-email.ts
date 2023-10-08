@@ -27,18 +27,19 @@ export function formatEmail({
       const metadata = event.data.object.metadata;
       const currency = event.data.object.plan?.currency;
       const amount = event.data.object.plan?.amount / 100; // Convert amount to dollars or appropriate currency
+      const status = event.data.object.status
       const stripeUrl = `https://dashboard.stripe.com/subscriptions/${subscription}`;
 
       let logString = `[${email}] - `;
 
       switch (category) {
         case "signups":
-          logString += `[substatus] - [${JSON.stringify(
+          logString += `[${status}] - [${JSON.stringify(
             metadata
           )}] - [${currency} ${amount.toFixed(2)}] - (sub)[${stripeUrl}]`;
           break;
         case "trialConversions":
-          logString += `[substatus] - [${JSON.stringify(
+          logString += `[${status}] - [${JSON.stringify(
             metadata
           )}] - (sub)[${stripeUrl}]`;
           break;

@@ -1,18 +1,13 @@
-# create-svelte
+## Getting Started
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+- Put the src/stripe-helpers into your utils folder.
+- Add the sendStripeDigest() function into a serverless function.
+- Put the stripe-digest-workflow.yml into your GitHub workflows folder, and replace the url inside of the file with the url of your serverless function.
+- Replace the console.log(digest); in  src/stripe-helpers/send-stripe-digest.ts with your email sending logic (postmark).
 
-## Creating a project
+## Other note
+- We use the file src/stripe-helpers/stripe.ts for initializing stripe. you likely already have this as part of your codebase -> you should be able to use your logic instead of having this file.
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
 
 ## Developing
 
